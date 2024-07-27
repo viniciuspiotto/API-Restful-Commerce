@@ -1,13 +1,8 @@
 package com.piotto.apiproduct;
 
-import com.piotto.apiproduct.domain.Category;
-import com.piotto.apiproduct.domain.City;
-import com.piotto.apiproduct.domain.Product;
-import com.piotto.apiproduct.domain.State;
-import com.piotto.apiproduct.repositories.CategoryRepository;
-import com.piotto.apiproduct.repositories.CityRepository;
-import com.piotto.apiproduct.repositories.ProductRepository;
-import com.piotto.apiproduct.repositories.StateRepository;
+import com.piotto.apiproduct.domain.*;
+import com.piotto.apiproduct.domain.enums.ClientType;
+import com.piotto.apiproduct.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,12 +17,16 @@ public class ApiProductApplication implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final StateRepository stateRepository;
     private final CityRepository cityRepository;
+    private final ClientRepository clientRepository;
+    private final AddressRepository addressRepository;
 
-    public ApiProductApplication(CategoryRepository categoryRepository, ProductRepository productRepository, StateRepository stateRepository, CityRepository cityRepository) {
+    public ApiProductApplication(CategoryRepository categoryRepository, ProductRepository productRepository, StateRepository stateRepository, CityRepository cityRepository, ClientRepository clientRepository, AddressRepository addressRepository) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
         this.stateRepository = stateRepository;
         this.cityRepository = cityRepository;
+        this.clientRepository = clientRepository;
+        this.addressRepository = addressRepository;
     }
 
     public static void main(String[] args) {
@@ -65,5 +64,16 @@ public class ApiProductApplication implements CommandLineRunner {
 
         stateRepository.saveAll(Arrays.asList(sta1, sta2));
         cityRepository.saveAll(Arrays.asList(c1, c2, c3));
+
+        Client cli1 = new Client(null, "Maria Silva", "maria@gmail.com", "17236123123", ClientType.INDIVIDUAL);
+        cli1.getPhones().addAll(Arrays.asList("172371231", "123123123"));
+
+        Address e1 = new Address(null, "Rua Flores", "300", "Apartment 303", "Jardim", "12312314", cli1, c1);
+        Address e2 = new Address(null, "Avenida Matos", "105", "Room 800", "Centro", "38209123", cli1, c2);
+
+        cli1.getAddresses().addAll(Arrays.asList(e1, e2));
+
+        clientRepository.save(cli1);
+        addressRepository.saveAll(Arrays.asList(e1, e2));
     }
 }
