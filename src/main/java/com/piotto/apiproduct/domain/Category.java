@@ -1,5 +1,6 @@
 package com.piotto.apiproduct.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -15,6 +16,7 @@ public class Category implements Serializable {
     private Integer id;
     private String name;
 
+    @JsonManagedReference
     @ManyToMany(
             mappedBy = "categories"
     )
