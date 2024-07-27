@@ -1,5 +1,6 @@
 package com.piotto.apiproduct.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.piotto.apiproduct.domain.enums.ClientType;
 import jakarta.persistence.*;
@@ -26,6 +27,7 @@ public class Client implements Serializable {
     @CollectionTable(name = "PHONES")
     private Set<String> phones = new HashSet<>();
 
+    @JsonBackReference
     @OneToMany(mappedBy = "client")
     private List<Order> orders = new ArrayList<>();
 

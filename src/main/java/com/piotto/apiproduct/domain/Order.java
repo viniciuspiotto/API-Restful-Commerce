@@ -1,42 +1,47 @@
 package com.piotto.apiproduct.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
+@Table(name = "orders")
 public class Order implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @JsonFormat(pattern = "dd/MM/yyyy hh:mm")
     private Date date;
 
+    @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
     private Payment payment;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
-
-    private List<Product> products;
 
     @ManyToOne
     @JoinColumn(name = "shipping_address_id")
     private Address shippingAddress;
 
+    @OneToMany(mappedBy = "id.order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrderItem> orderItems = new HashSet<>();
+
     public Order() {
     }
 
-    public Order(Integer id, Date date, Payment payment, Client client, Address shippingAddress) {
+    public Order(Integer id, Date date, Client client, Address shippingAddress) {
         this.id = id;
         this.date = date;
-        this.payment = payment;
         this.client = client;
         this.shippingAddress = shippingAddress;
     }
@@ -73,20 +78,20 @@ public class Order implements Serializable {
         this.client = client;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
     public Address getShippingAddress() {
         return shippingAddress;
     }
 
     public void setShippingAddress(Address shippingAddress) {
         this.shippingAddress = shippingAddress;
+    }
+
+    public Set<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(Set<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
     @Override
@@ -99,6 +104,6 @@ public class Order implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id);
     }
 }

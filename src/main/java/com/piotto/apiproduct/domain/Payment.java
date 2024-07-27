@@ -1,5 +1,6 @@
 package com.piotto.apiproduct.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.piotto.apiproduct.domain.enums.PaymentState;
 import jakarta.persistence.*;
 
@@ -12,8 +13,9 @@ public abstract class Payment implements Serializable {
 
     @Id
     private Integer id;
-    private PaymentState state;
+    private Integer state;
 
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "order_id")
     @MapsId
@@ -24,7 +26,7 @@ public abstract class Payment implements Serializable {
 
     public Payment(Integer id, PaymentState state, Order order) {
         this.id = id;
-        this.state = state;
+        this.state = state.getId();
         this.order = order;
     }
 
@@ -37,11 +39,11 @@ public abstract class Payment implements Serializable {
     }
 
     public PaymentState getState() {
-        return state;
+        return PaymentState.toEnum(state);
     }
 
     public void setState(PaymentState state) {
-        this.state = state;
+        this.state = state.getId();
     }
 
     public Order getOrder() {

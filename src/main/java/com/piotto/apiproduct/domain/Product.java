@@ -1,12 +1,11 @@
 package com.piotto.apiproduct.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 public class Product implements Serializable {
@@ -25,8 +24,10 @@ public class Product implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories = new ArrayList<>();
-    
-    private List<Order> orders = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "id.product")
+    private Set<OrderItem> orderItems = new HashSet<>();
 
     public Product() {
     }
@@ -35,6 +36,15 @@ public class Product implements Serializable {
         this.id = id;
         this.name = name;
         this.price = price;
+    }
+
+    @JsonIgnore
+    public List<Order> getOrders() {
+        List<Order> orders = new ArrayList<>();
+        for (OrderItem orderItem : orderItems) {
+            orders.add(orderItem.getOrder());
+        }
+        return orders;
     }
 
     public Integer getId() {
@@ -69,12 +79,12 @@ public class Product implements Serializable {
         this.categories = categories;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public Set<OrderItem> getOrderItems() {
+        return orderItems;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setOrderItems(Set<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
     @Override
