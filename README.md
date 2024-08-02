@@ -10,7 +10,7 @@ Bem-vindo ao projeto da Aplicação de Comércio! Este projeto foi implementado 
 - Endpoints RESTful para interação com a aplicação
 
 ## Design UML
-![Diagrama UML](/img/commerce-uml.svg)
+![Diagrama UML](/img/commerce-uml.png)
 
 O diagrama UML acima fornece uma visão geral de alto nível da arquitetura da aplicação, detalhando as classes e seus relacionamentos.
 
